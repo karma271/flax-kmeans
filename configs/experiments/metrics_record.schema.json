@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MetricRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "implementation",
+    "dataset_id",
+    "inertia",
+    "silhouette",
+    "calinski_harabasz",
+    "davies_bouldin"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "implementation": {
+      "type": "string",
+      "enum": [
+        "jax_kmeans",
+        "jax_flash_kmeans",
+        "sklearn_kmeans",
+        "flashkmeans_wrapper"
+      ]
+    },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "inertia": { "type": "number" },
+    "silhouette": { "type": ["number", "null"], "minimum": -1.0, "maximum": 1.0 },
+    "calinski_harabasz": { "type": ["number", "null"], "minimum": 0.0 },
+    "davies_bouldin": { "type": ["number", "null"], "minimum": 0.0 }
+  }
+}

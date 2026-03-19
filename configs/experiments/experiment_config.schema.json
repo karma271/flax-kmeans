@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExperimentConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "implementation",
+    "dataset_id",
+    "random_seed",
+    "n_clusters",
+    "max_iter",
+    "tolerance",
+    "n_init"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "implementation": {
+      "type": "string",
+      "enum": [
+        "jax_kmeans",
+        "jax_flash_kmeans",
+        "sklearn_kmeans",
+        "flashkmeans_wrapper"
+      ]
+    },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "random_seed": { "type": "integer" },
+    "n_clusters": { "type": "integer", "minimum": 2 },
+    "max_iter": { "type": "integer", "minimum": 1 },
+    "tolerance": { "type": "number", "exclusiveMinimum": 0.0 },
+    "n_init": { "type": "integer", "minimum": 1 },
+    "batch_size": { "type": ["integer", "null"], "minimum": 1 },
+    "notes": { "type": "string" }
+  }
+}

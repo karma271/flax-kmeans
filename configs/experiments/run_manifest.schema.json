@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "timestamp_utc",
+    "implementation",
+    "device",
+    "dataset_id",
+    "n_samples",
+    "n_features",
+    "n_clusters",
+    "random_seed",
+    "max_iter",
+    "tolerance",
+    "n_init",
+    "converged",
+    "iterations_used",
+    "fit_time_ms",
+    "predict_time_ms"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "implementation": {
+      "type": "string",
+      "enum": [
+        "jax_kmeans",
+        "jax_flash_kmeans",
+        "sklearn_kmeans",
+        "flashkmeans_wrapper"
+      ]
+    },
+    "device": { "type": "string", "enum": ["cpu", "gpu", "tpu"] },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "n_samples": { "type": "integer", "minimum": 1 },
+    "n_features": { "type": "integer", "minimum": 1 },
+    "n_clusters": { "type": "integer", "minimum": 2 },
+    "random_seed": { "type": "integer" },
+    "max_iter": { "type": "integer", "minimum": 1 },
+    "tolerance": { "type": "number", "exclusiveMinimum": 0.0 },
+    "n_init": { "type": "integer", "minimum": 1 },
+    "converged": { "type": "boolean" },
+    "iterations_used": { "type": "integer", "minimum": 1 },
+    "fit_time_ms": { "type": "number", "minimum": 0.0 },
+    "predict_time_ms": { "type": "number", "minimum": 0.0 },
+    "peak_memory_mb": { "type": ["number", "null"], "minimum": 0.0 },
+    "software_versions": {
+      "type": ["object", "null"],
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}
