@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import plotly.io as pio
+import plotly.io as pio  # type: ignore[import-untyped]
 
 PASTEL_COLORWAY = [
     "#8ecae6",
