@@ -1,0 +1,19 @@
+dataset_id: "pen_digits"
+kind: "real"
+source: "uci"
+download_url: "https://archive.ics.uci.edu/dataset/81/pen+based+recognition+of+handwritten+digits"
+raw_data_dir: "data/raw/pen_digits"
+
+features:
+  include_columns: "all_numeric"
+  label_column: "digit_class"
+
+preprocessing:
+  standardize: true
+  impute_missing: false
+
+evaluation:
+  use_for_core_unsupervised_metrics: true
+  retain_labels_for_optional_external_checks: true
+
+notes: "Medium-sized real dataset with labels, useful for centroid-clustering comparisons."

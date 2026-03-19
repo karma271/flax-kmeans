@@ -1,0 +1,28 @@
+dataset_id: "wholesale_customers"
+kind: "real"
+source: "uci"
+download_url: "https://archive.ics.uci.edu/dataset/292/wholesale+customers"
+raw_data_dir: "data/raw/wholesale_customers"
+
+features:
+  include_columns:
+    - "Fresh"
+    - "Milk"
+    - "Grocery"
+    - "Frozen"
+    - "Detergents_Paper"
+    - "Delicassen"
+  label_columns_optional:
+    - "Channel"
+    - "Region"
+
+preprocessing:
+  log1p_features: true
+  standardize: true
+  impute_missing: false
+
+evaluation:
+  use_for_core_unsupervised_metrics: true
+  retain_labels_for_optional_external_checks: true
+
+notes: "Small real tabular dataset for quick correctness and iteration cycles."
