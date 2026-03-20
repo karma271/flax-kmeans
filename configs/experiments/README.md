@@ -53,3 +53,9 @@ uv run python -m src.eval.run_benchmark \
   --x-npy /path/to/features.npy \
   --implementation-kwargs '{"data_chunk_size": 2048, "centroid_chunk_size": 128}'
 ```
+
+After multiple runs have produced JSON artifacts, generate comparative Phase E outputs:
+
+```bash
+uv run python -m src.eval.run_comparative_analysis --results-root results --output-root results
+```
