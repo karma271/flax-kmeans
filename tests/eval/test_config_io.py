@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.eval.config_io import load_experiment_config
 
 
@@ -33,3 +35,26 @@ def test_load_experiment_config_reads_yaml_contract(tmp_path: Path) -> None:
     assert config.implementation == "sklearn_kmeans"
     assert config.n_clusters == 3
     assert config.n_init == 5
+
+
+def test_load_experiment_config_rejects_schema_invalid_payload(tmp_path: Path) -> None:
+    """Loader fails fast when config violates contract schema constraints."""
+    config_path = tmp_path / "invalid_experiment.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                'run_id: "exp_test_invalid_001"',
+                'implementation: "sklearn_kmeans"',
+                'dataset_id: "synthetic_blobs_s1"',
+                "random_seed: 42",
+                "n_clusters: 3",
+                "max_iter: 200",
+                "tolerance: 0.0",
+                "n_init: 5",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="ExperimentConfig schema validation failed"):
+        load_experiment_config(config_path)

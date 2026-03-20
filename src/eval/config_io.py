@@ -8,6 +8,7 @@ from typing import Any
 import yaml
 
 from src.eval.contracts import ExperimentConfig
+from src.eval.schema_validation import validate_experiment_config_payload
 
 
 def load_experiment_config(path: str | Path) -> ExperimentConfig:
@@ -16,7 +17,9 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
     payload = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Experiment config must be a YAML mapping/object.")
-    return ExperimentConfig(**cast_dict(payload))
+    casted_payload = cast_dict(payload)
+    validate_experiment_config_payload(casted_payload)
+    return ExperimentConfig(**casted_payload)
 
 
 def cast_dict(value: dict[str, Any]) -> dict[str, Any]:
