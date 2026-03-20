@@ -5,6 +5,7 @@ All implementations must emit artifacts using these contracts to ensure comparis
 ## Files
 
 - `experiment_config.template.yaml`: template used to launch a run.
+- `benchmark_matrix.yaml`: shared notebook benchmark matrix for strict comparisons.
 - `experiment_config.schema.json`: schema for experiment inputs.
 - `run_manifest.schema.json`: schema for execution metadata written per run.
 - `metrics_record.schema.json`: schema for normalized clustering quality metrics.
@@ -59,3 +60,8 @@ After multiple runs have produced JSON artifacts, generate comparative Phase E o
 ```bash
 uv run python -m src.eval.run_comparative_analysis --results-root results --output-root results
 ```
+
+Notebook workflow note:
+
+- Notebook runners can consume `configs/experiments/benchmark_matrix.yaml` and write to
+  `results/<exp_name>/manifests` + `results/<exp_name>/metrics` for cross-device aggregation.

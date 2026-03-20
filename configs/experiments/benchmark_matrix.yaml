@@ -1,0 +1,32 @@
+exp_name: "comparison_v1"
+seeds: [11, 23, 37]
+
+run_config:
+  max_iter: 300
+  tolerance: 0.0001
+  n_init: 5
+
+datasets:
+  - dataset_id: "synthetic_blobs_s"
+    n_samples: 2000
+    n_features: 16
+    n_clusters: 8
+    cluster_std: 0.8
+  - dataset_id: "synthetic_blobs_m"
+    n_samples: 10000
+    n_features: 32
+    n_clusters: 16
+    cluster_std: 1.0
+  - dataset_id: "synthetic_blobs_l"
+    n_samples: 50000
+    n_features: 64
+    n_clusters: 32
+    cluster_std: 1.2
+
+implementation_kwargs:
+  jax_flash_kmeans:
+    data_chunk_size: 4096
+    centroid_chunk_size: 256
+  flashkmeans_wrapper:
+    dtype: "float32"
+    use_triton: true
