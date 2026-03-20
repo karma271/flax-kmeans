@@ -76,6 +76,26 @@ uv run pytest
 - Metrics schema: `configs/experiments/metrics_record.schema.json`
 - Dataset plan and acquisition/preprocessing notes: `configs/datasets/README.md`
 
+## Comparative Analysis
+
+Generate summary tables and plots from previously written benchmark artifacts:
+
+```bash
+uv run python -m src.eval.run_comparative_analysis \
+  --results-root results \
+  --output-root results
+```
+
+Outputs:
+
+- `results/metrics/comparative_runs.csv`
+- `results/metrics/summary_by_device_scale.csv`
+- `results/metrics/summary_by_implementation.csv`
+- `results/plots/tradeoff_speed_vs_quality.html`
+- `results/plots/scaling_fit_time.html`
+- `results/plots/device_total_time.html`
+- `results/plots/tradeoff_report.md`
+
 ## Plot Styling Defaults
 
 - Global style config: `configs/plot_style.yaml`

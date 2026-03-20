@@ -22,9 +22,5 @@ CONTRIBUTING.md
 
 # Local data and outputs
 data/raw/
-results/manifests/*.json
-results/metrics/*.json
-results/plots/*.html
-results/plots/*.png
-results/plots/*.pdf
+results/
 
