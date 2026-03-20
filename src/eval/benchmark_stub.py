@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import sys
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -14,6 +15,7 @@ from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silho
 
 from src.algorithms.result import KMeansFitResult
 from src.eval.contracts import Device, ExperimentConfig, MetricRecord, RunManifest
+from src.eval.schema_validation import validate_metric_record_payload, validate_run_manifest_payload
 
 Runner = Callable[..., KMeansFitResult]
 
@@ -63,7 +65,7 @@ def _detect_device(implementation: str) -> Device:
         return "tpu"
     if backend in {"gpu", "cuda"}:
         return "gpu"
-        return "cpu"
+    return "cpu"
 
 
 def _software_versions(implementation: str) -> dict[str, str]:
@@ -130,6 +132,42 @@ def _compute_quality_metrics(
     return silhouette, calinski_harabasz, davies_bouldin
 
 
+def _measure_predict_time_ms(
+    x: np.ndarray,
+    centroids: np.ndarray,
+    *,
+    chunk_size: int = 4096,
+) -> float:
+    """Measure nearest-centroid assignment time in milliseconds."""
+    if chunk_size < 1:
+        raise ValueError("chunk_size must be >= 1.")
+    if x.shape[1] != centroids.shape[1]:
+        raise ValueError("x and centroids must have the same number of features.")
+
+    start = time.perf_counter()
+    for start_idx in range(0, x.shape[0], chunk_size):
+        stop_idx = min(start_idx + chunk_size, x.shape[0])
+        x_chunk = x[start_idx:stop_idx]
+        dists = np.sum((x_chunk[:, None, :] - centroids[None, :, :]) ** 2, axis=2)
+        _ = np.argmin(dists, axis=1)
+    return (time.perf_counter() - start) * 1000.0
+
+
+def _peak_memory_mb() -> float | None:
+    """Return peak resident memory for current process when available."""
+    try:
+        import resource
+
+        max_rss = float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+    except Exception:
+        return None
+    if max_rss <= 0.0:
+        return None
+    if sys.platform == "darwin":
+        return max_rss / (1024.0 * 1024.0)
+    return max_rss / 1024.0
+
+
 def run_benchmark_stub(
     config: ExperimentConfig,
     x: np.ndarray,
@@ -156,6 +194,12 @@ def run_benchmark_stub(
     )
     fit_time_ms = (time.perf_counter() - start) * 1000.0
 
+    centroids = np.asarray(result.centroids, dtype=np.float32)
+    predict_time_ms = _measure_predict_time_ms(
+        x=x_array,
+        centroids=centroids,
+    )
+
     silhouette, calinski_harabasz, davies_bouldin = _compute_quality_metrics(
         x=x_array,
         labels=result.labels,
@@ -176,8 +220,8 @@ def run_benchmark_stub(
         converged=result.converged,
         iterations_used=result.n_iter,
         fit_time_ms=float(fit_time_ms),
-        predict_time_ms=0.0,
-        peak_memory_mb=None,
+        predict_time_ms=float(predict_time_ms),
+        peak_memory_mb=_peak_memory_mb(),
         software_versions=_software_versions(config.implementation),
     )
     metrics = MetricRecord(
@@ -200,12 +244,17 @@ def write_benchmark_artifacts(
     metrics_dir: Path = Path("results/metrics"),
 ) -> tuple[Path, Path]:
     """Write manifest and metrics records as JSON files by run id."""
+    manifest_payload = manifest.to_dict()
+    metrics_payload = metrics.to_dict()
+    validate_run_manifest_payload(manifest_payload)
+    validate_metric_record_payload(metrics_payload)
+
     manifests_dir.mkdir(parents=True, exist_ok=True)
     metrics_dir.mkdir(parents=True, exist_ok=True)
 
     manifest_path = manifests_dir / f"{manifest.run_id}.json"
     metrics_path = metrics_dir / f"{metrics.run_id}.json"
 
-    manifest_path.write_text(json.dumps(manifest.to_dict(), indent=2, sort_keys=True), "utf-8")
-    metrics_path.write_text(json.dumps(metrics.to_dict(), indent=2, sort_keys=True), "utf-8")
+    manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True), "utf-8")
+    metrics_path.write_text(json.dumps(metrics_payload, indent=2, sort_keys=True), "utf-8")
     return manifest_path, metrics_path
