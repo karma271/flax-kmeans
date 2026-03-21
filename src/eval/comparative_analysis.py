@@ -1,4 +1,4 @@
-"""Comparative analysis helpers for Phase E reporting artifacts."""
+"""Comparative analysis helpers for reporting benchmark artifacts."""
 
 from __future__ import annotations
 
@@ -129,7 +129,7 @@ def build_comparative_dataframe(manifests: pd.DataFrame, metrics: pd.DataFrame) 
 
 
 def build_summary_tables(comparative: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Build grouped summary tables for Phase E comparisons."""
+    """Build grouped summary tables for cross-implementation comparisons."""
     by_device_scale = (
         comparative.groupby(["dataset_id", "device", "scale_id", "implementation"], dropna=False)
         .agg(

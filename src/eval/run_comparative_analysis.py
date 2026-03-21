@@ -1,4 +1,4 @@
-"""CLI for Phase E comparative analysis outputs."""
+"""CLI for comparative analysis outputs."""
 
 from __future__ import annotations
 

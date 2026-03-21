@@ -1,4 +1,4 @@
-"""Tests for Phase C benchmark stub helpers."""
+"""Tests for benchmark runner helpers."""
 
 from __future__ import annotations
 

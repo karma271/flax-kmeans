@@ -2,7 +2,7 @@
 
 ## Critical Review Outcomes (from your draft)
 
-- The phase sequence is solid, but naming and success criteria need tightening to avoid drift.
+- The execution sequence is solid, but naming and success criteria need tightening to avoid drift.
 - Environment notes were contradictory (GPU vs TPU). Plan should define a device matrix by experiment type instead of one global target.
 - Evaluation metrics listed (F1/Precision/Recall/ROC-AUC) are classification-first and not appropriate as core clustering metrics.
 - Experiment workflow should avoid manual code copy; GitHub sync into Colab is more reproducible and less error-prone.
@@ -51,20 +51,20 @@ Guidelines:
   - Performance: fit time, predict time, peak memory (where available), convergence iterations
 - Record metrics in a single normalized results format for later plotting/comparison.
 
-## Phase Plan
+## Execution Stages
 
-1. Phase A: Foundation setup
+1. Stage 1: Foundation setup
    - Repo structure, `uv` environment, lint/format/type/docstring baseline
    - Plot style system (pastel palette + consistent font stack)
-2. Phase B: Correctness baselines
+2. Stage 2: Correctness baselines
    - Implement JAX KMeans and sklearn KMeans
    - Validate equivalent behavior on small synthetic sets
-3. Phase C: Flash implementations
+3. Stage 3: Flash implementations
    - Implement JAX flash-style variant and external flash-kmeans wrapper path
    - Validate parity on shared test inputs
-4. Phase D: Benchmark harness
+4. Stage 4: Benchmark harness
    - Add config-driven benchmark runner and artifact logging
-5. Phase E: Comparative analysis
+5. Stage 5: Comparative analysis
    - Generate final plots and summary tables; document tradeoffs by device and data scale
 
 ## Cursor and Documentation Strategy
