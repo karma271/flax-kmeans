@@ -1,4 +1,4 @@
-"""Minimal benchmark runner stub for Phase C and Phase D integration."""
+"""Minimal benchmark runner used for integration and artifact generation."""
 
 from __future__ import annotations
 

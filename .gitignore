@@ -5,6 +5,10 @@ __pycache__/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+.ipynb_checkpoints/
+
+# OS artifacts
+.DS_Store
 
 # Build artifacts
 build/
@@ -13,12 +17,10 @@ dist/
 
 # Local editor config
 .editorconfig
+CONTRIBUTING.md
 
 # Plans
 plans/
-
-# miscellaneous
-CONTRIBUTING.md
 
 # Local data and outputs
 data/raw/

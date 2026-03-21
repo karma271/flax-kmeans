@@ -1,4 +1,4 @@
-"""Phase C tests for flash-style JAX and flash-kmeans wrapper paths."""
+"""Tests for flash-style JAX and flash-kmeans wrapper paths."""
 
 from __future__ import annotations
 

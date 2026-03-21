@@ -1,4 +1,4 @@
-"""Phase B correctness tests for JAX and sklearn KMeans baselines."""
+"""Correctness tests for JAX and sklearn KMeans baselines."""
 
 from __future__ import annotations
 

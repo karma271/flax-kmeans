@@ -21,7 +21,9 @@ def _load_schema(path: Path) -> dict[str, Any]:
 _EXPERIMENT_CONFIG_VALIDATOR = Draft202012Validator(
     _load_schema(_SCHEMA_DIR / "experiment_config.schema.json")
 )
-_RUN_MANIFEST_VALIDATOR = Draft202012Validator(_load_schema(_SCHEMA_DIR / "run_manifest.schema.json"))
+_RUN_MANIFEST_VALIDATOR = Draft202012Validator(
+    _load_schema(_SCHEMA_DIR / "run_manifest.schema.json")
+)
 _METRIC_RECORD_VALIDATOR = Draft202012Validator(
     _load_schema(_SCHEMA_DIR / "metrics_record.schema.json")
 )

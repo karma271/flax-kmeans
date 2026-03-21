@@ -1,30 +1,30 @@
-# Experiment Contracts
+# Experiment Configs and Schemas
 
-All implementations must emit artifacts using these contracts to ensure comparisons are valid.
+These files define benchmark inputs and the required JSON artifact structure.
 
 ## Files
 
-- `experiment_config.template.yaml`: template used to launch a run.
-- `benchmark_matrix.yaml`: shared notebook benchmark matrix for strict comparisons.
-- `experiment_config.schema.json`: schema for experiment inputs.
-- `run_manifest.schema.json`: schema for execution metadata written per run.
-- `metrics_record.schema.json`: schema for normalized clustering quality metrics.
+- `experiment_config.template.yaml`: single-run config template.
+- `benchmark_matrix.yaml`: shared multi-run matrix used by notebooks.
+- `experiment_config.schema.json`: schema for run configuration inputs.
+- `run_manifest.schema.json`: schema for run metadata outputs.
+- `metrics_record.schema.json`: schema for clustering metric outputs.
 
-## Artifact locations
+## Artifact paths
 
 - Manifests: `results/manifests/<run_id>.json`
 - Metrics: `results/metrics/<run_id>.json`
 
-## Required comparability guarantees
+## Consistency rules
 
-- Shared `run_id` between manifest and metrics outputs.
-- `implementation` uses one of the canonical IDs.
-- `dataset_id`, `n_clusters`, and `random_seed` must be captured for every run.
-- Time units are milliseconds (`fit_time_ms`, `predict_time_ms`).
+- `run_id` must match between manifest and metrics artifacts.
+- `implementation` must be one of canonical implementation IDs.
+- `dataset_id`, `n_clusters`, and `random_seed` are required for every run.
+- Timing fields use milliseconds (`fit_time_ms`, `predict_time_ms`).
 
-## Minimal CLI usage
+## Commands
 
-Run one config with a precomputed feature matrix (`.npy`):
+Run one benchmark from config + `.npy` features:
 
 ```bash
 uv run python -m src.eval.run_benchmark \
@@ -33,7 +33,7 @@ uv run python -m src.eval.run_benchmark \
   --results-root results
 ```
 
-Generate a quick synthetic `.npy` locally:
+Generate synthetic `.npy` inputs:
 
 ```bash
 uv run python -m src.data.generate_synthetic_npy \
@@ -46,7 +46,7 @@ uv run python -m src.data.generate_synthetic_npy \
   --random-seed 42
 ```
 
-Optional implementation-specific kwargs can be passed as JSON:
+Pass implementation-specific kwargs as JSON:
 
 ```bash
 uv run python -m src.eval.run_benchmark \
@@ -55,13 +55,13 @@ uv run python -m src.eval.run_benchmark \
   --implementation-kwargs '{"data_chunk_size": 2048, "centroid_chunk_size": 128}'
 ```
 
-After multiple runs have produced JSON artifacts, generate comparative Phase E outputs:
+Build comparative outputs from collected artifacts:
 
 ```bash
 uv run python -m src.eval.run_comparative_analysis --results-root results --output-root results
 ```
 
-Notebook workflow note:
+Notebook runs can use `benchmark_matrix.yaml` and write to:
 
-- Notebook runners can consume `configs/experiments/benchmark_matrix.yaml` and write to
-  `results/<exp_name>/manifests` + `results/<exp_name>/metrics` for cross-device aggregation.
+- `results/<exp_name>/manifests`
+- `results/<exp_name>/metrics`
